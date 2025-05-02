@@ -71,6 +71,7 @@ export class ExamStack extends cdk.Stack {
     });
 
     const anEndpoint = api.root.addResource("patha");
+    table.grantReadData(question1Fn);
 
 
     // ==================================
