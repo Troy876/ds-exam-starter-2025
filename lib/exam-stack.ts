@@ -115,8 +115,11 @@ export class ExamStack extends cdk.Stack {
       receiveMessageWaitTime: cdk.Duration.seconds(5),
     });
 
-    const queueA = new sqs.Queue(this, "queueA", {
-      receiveMessageWaitTime: cdk.Duration.seconds(5),
+    const queueA = new sqs.Queue(this, "orders-queue", {
+      deadLetterQueue: {
+        queue: queueB,
+        maxReceiveCount: 2,
+      },
     });
     
     const lambdaXFn = new lambdanode.NodejsFunction(this, "LambdaXFn", {
@@ -140,7 +143,16 @@ export class ExamStack extends cdk.Stack {
         REGION: "eu-west-1",
       },
     });
-    
+
+    topic1.addSubscription(
+      new subs.SqsSubscription(queueA)
+    );
+
+    const logLambda = new events.SqsEventSource(queueA, {
+      batchSize: 5,
+    });
+    lambdaXFn.addEventSource(logLambda);
+
   }
 }
   
