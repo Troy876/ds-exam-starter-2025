@@ -73,6 +73,12 @@ export class ExamStack extends cdk.Stack {
     const anEndpoint = api.root.addResource("patha");
     table.grantReadData(question1Fn);
 
+    const crewEndpoint = api.root.addResource("crew");
+    crewEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(question1Fn, { proxy: true })
+    );
+
 
     // ==================================
     // Question 2 - Event-Driven architecture
