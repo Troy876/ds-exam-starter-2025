@@ -79,6 +79,24 @@ export class ExamStack extends cdk.Stack {
       new apig.LambdaIntegration(question1Fn, { proxy: true })
     );
 
+    const roleEndpoint = crewEndpoint.addResource("{role}");
+    roleEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(question1Fn, { proxy: true })
+    );
+
+    const moviesEndpoint = roleEndpoint.addResource("movies");
+    moviesEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(question1Fn, { proxy: true })
+    );
+
+    const movieIdEndpoint = moviesEndpoint.addResource("{movieId}");
+    movieIdEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(question1Fn, { proxy: true })
+    );
+
 
     // ==================================
     // Question 2 - Event-Driven architecture
